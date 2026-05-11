@@ -39,7 +39,7 @@ export default function SobreNos() {
                     <div className="h-1.5 w-20 bg-[#b91c1c] mx-auto mt-4 rounded-full"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
                     {Cards.map((card, index) => (
                         <div
                             key={index}
@@ -56,7 +56,7 @@ export default function SobreNos() {
                             </p>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
                 <div className="flex flex-col md:flex-row items-center gap-12 mb-24">
                     <div className="w-full md:w-1/2 relative h-100 rounded-2xl overflow-hidden shadow-xl">

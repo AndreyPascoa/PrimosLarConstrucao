@@ -1,36 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-    { src: "/carousel/1.png", alt: "Slide 1" },
+    { src: "/carousel/1.png", alt: "Promoção de Ferramentas" },
+    { src: "/carousel/2.png", alt: "Inalguaração do Site" },
 ];
 
 export default function CarouselAnimated() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    const nextSlide = useCallback(() => {
+        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, []);
+
     const prevSlide = () => {
-        const isFirstSlide = currentIndex === 0;
-        const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-        setCurrentIndex(newIndex);
+        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     };
 
-    const nextSlide = () => {
-        const isLastSlide = currentIndex === images.length - 1;
-        const newIndex = isLastSlide ? 0 : currentIndex + 1;
-        setCurrentIndex(newIndex);
-    };
-
-    const goToSlide = (slideIndex: number) => {
-        setCurrentIndex(slideIndex);
-    };
+    useEffect(() => {
+        const timer = setInterval(nextSlide, 5000);
+        return () => clearInterval(timer);
+    }, [nextSlide]);
 
     return (
-        <div className="max-w-full h-100 w-full m-auto relative group overflow-hidden">
-
+        <section className="relative w-full h-100 md:h-125 lg:h-150 overflow-hidden bg-gray-200">
             <div
-                className="flex w-full h-full transition-transform duration-500 ease-out"
+                className="flex w-full h-full transition-transform duration-700 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
                 {images.map((image, index) => (
@@ -42,36 +40,39 @@ export default function CarouselAnimated() {
                             className="object-cover"
                             priority={index === 0}
                         />
+                        <div className="absolute inset-0 bg-black/10"></div>
                     </div>
                 ))}
             </div>
 
             <button
                 onClick={prevSlide}
-                className="hidden group-hover:flex absolute top-1/2 -translate-y-1/2 left-5 z-20 items-center justify-center w-8 h-8 rounded-full bg-(--primarycolor) 
-                text-white hover:bg-(--secoundcolor) transition-colors text-2xl"
+                className="absolute top-1/2 -translate-y-1/2 left-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
             >
-                ❮
+                <ChevronLeft size={30} />
             </button>
 
             <button
                 onClick={nextSlide}
-                className="hidden group-hover:flex absolute top-1/2 -translate-y-1/2 right-5 z-20 items-center justify-center w-8 h-8 rounded-full bg-(--primarycolor) 
-                text-white hover:bg-(--secoundcolor) transition-colors text-2xl cursor-pointer"
+                className="absolute top-1/2 -translate-y-1/2 right-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-[var(--primarycolor)"
             >
-                ❯
+                <ChevronRight size={30} />
             </button>
 
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-                {images.map((_, slideIndex) => (
-                    <div
-                        key={slideIndex}
-                        onClick={() => goToSlide(slideIndex)}
-                        className={`cursor-pointer transition-all duration-300 rounded-full h-2 
-                        ${currentIndex === slideIndex ? "bg-(--primarycolor) w-8" : "bg-(--secoundcolor) w-2 hover:bg-white"}`}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
+                {images.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={`h-3 transition-all duration-300 rounded-full ${
+                            currentIndex === index 
+                            ? "bg-(--primarycolor) w-10" 
+                            : "bg-white/50 w-3 hover:bg-white"
+                        }`}
+                        aria-label={`Ir para slide ${index + 1}`}
                     />
                 ))}
             </div>
-        </div>
+        </section>
     );
 }
