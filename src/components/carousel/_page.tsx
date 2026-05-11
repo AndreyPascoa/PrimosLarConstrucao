@@ -5,9 +5,6 @@ import Image from "next/image";
 
 const images = [
     { src: "/carousel/1.png", alt: "Slide 1" },
-    { src: "/carousel/2.png", alt: "Slide 2" },
-    { src: "/carousel/3.png", alt: "Slide 3" },
-    { src: "/carousel/4.png", alt: "Slide 4" },
 ];
 
 export default function CarouselAnimated() {

@@ -27,10 +27,10 @@ export default function Novidade() {
 
         <div className="w-full md:w-1/2 flex justify-center">
           <Image
-            src="/caixa-ferramentas.png"
+            src="/evento/copa.jpeg"
             alt="Promoção Copa do Mundo Primos"
-            width={550}
-            height={400}
+            width={750}
+            height={600}
             className="rounded-lg object-contain"
           />
         </div>
