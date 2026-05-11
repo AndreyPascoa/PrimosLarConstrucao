@@ -1,25 +1,30 @@
 import Image from "next/image";
 
-export default function SobreNos() {
+export default function Novidade() {
   return (
     <section className="w-full max-w-6xl mx-auto py-16 px-4">
-      <div className="flex flex-col items-center text-center mb-12">
-        <span className="text-4xl md:text-5xl font-bold text-(--primarycolor) leading-none">
-          NOVIDADES NA
-        </span>
-        <div className="mt-2">
-          <Image
-            src="/logo2.png"
-            alt="Primos Logo"
-            width={350}
-            height={120}
-            className="object-contain"
-          />
+      <div className="text-center mb-16">
+        <h2 className="text-sm font-bold tracking-widest text-[#b91c1c] uppercase mb-3">
+          Novidades na
+        </h2>
+
+        <div className="flex flex-col items-center">
+          <div className="mt-2">
+            <Image
+              src="/logo2.png"
+              alt="Primos Logo"
+              width={350}
+              height={120}
+              className="object-contain"
+            />
+          </div>
         </div>
+
+        <div className="h-1.5 w-20 bg-[#b91c1c] mx-auto mt-6 rounded-full"></div>
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-12">
-        
+
         <div className="w-full md:w-1/2 flex justify-center">
           <Image
             src="/caixa-ferramentas.png"
@@ -30,14 +35,14 @@ export default function SobreNos() {
           />
         </div>
 
-        <div className="w-full md:w-1/2 flex flex-col items-start text-left">
+        <div className="w-full md:w-1/2 flex flex-col items-center text-left ">
           <h2 className="text-3xl md:text-4xl font-bold text-[#b91c1c] mb-4">
             COPA DO MUNDO 2026
           </h2>
 
           <p className="text-gray-700 text-lg leading-relaxed mb-6">
-            Não perca! A partir de 15/05 começa a Promoção da Copa do Mundo 2026 
-            aqui na PRIMOS. Serão ofertas exclusivas, preços especiais e o melhor: 
+            Não perca! A partir de 15/05 começa a Promoção da Copa do Mundo 2026
+            aqui na PRIMOS. Serão ofertas exclusivas, preços especiais e o melhor:
             prêmios imperdíveis que você só encontra nessa campanha.
           </p>
 
@@ -49,7 +54,7 @@ export default function SobreNos() {
             Saiba mais
           </button>
         </div>
-        
+
       </div>
     </section>
   );
