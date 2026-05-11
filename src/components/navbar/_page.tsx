@@ -17,7 +17,7 @@ export default function Navbar() {
     `;
 
     return (
-        <div className="w-full h-25 bg-white text-black flex items-center justify-center px-4 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] relative z-50">
+        <div className="w-full h-25 bg-white text-black flex items-center justify-center px-4 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] sticky top-0 z-50">
             <nav className="flex justify-between md:justify-center items-center w-full max-w-6xl md:gap-8">
 
                 <Image src={"/logo.png"} alt="Logo" width={137} height={65} priority />
