@@ -6,7 +6,7 @@ import {
   Nut, 
   Droplets, 
   HardHat,
-  Layers // Ícone para Material Básico
+  Layers
 } from "lucide-react";
 
 const listaProdutos = [
@@ -110,7 +110,7 @@ export default function Produtos() {
 
                 <div className="mt-16 text-center">
                     <p className="text-gray-400 italic text-sm">
-                        *Entregas rápidas de areia e pedra em toda Sorocaba e região.
+                        *Entregas rápidas de materiais báscios em Sorocaba e região.
                     </p>
                 </div>
             </div>
