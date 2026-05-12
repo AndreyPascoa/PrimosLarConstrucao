@@ -10,7 +10,13 @@ export default function Novidade() {
 
   const handleOpenModal = () => {
     setModalText(
-      "A promoção da Copa do Mundo 2026 começa em 15/05! Fique ligado para ofertas exclusivas e prêmios incríveis!"
+      `A Promoção da Copa do Mundo 2026 chegou na PRIMOS trazendo ofertas especiais, condições imperdíveis e muitas novidades para nossos clientes!
+
+      A partir do dia 15/05 você poderá aproveitar preços promocionais em diversos produtos, além de participar de uma campanha cheia de brindes e surpresas exclusivas durante todo o período da promoção.
+
+      E não para por aí: durante o mês de junho teremos ainda mais novidades, ações especiais e oportunidades para você economizar de verdade enquanto entra no clima da Copa do Mundo 2026.
+
+      Aqui na PRIMOS você encontra qualidade, variedade e vantagens especiais para deixar sua compra ainda melhor. Não perca essa oportunidade e acompanhe nossas redes sociais e nossa loja para ficar por dentro de tudo!`
     );
     setIsOpen(true);
   };
@@ -64,9 +70,9 @@ export default function Novidade() {
               Quer mais? Economia de verdade e ainda com brindes!
             </p>
 
-            <button 
+            <button
               className="px-12 py-3 border-2 border-(--primarycolor) text-(--primarycolor) rounded-full font-bold text-xl hover:bg-(--primarycolor) hover:text-white transition-all duration-300 cursor-pointer shadow-sm"
-              onClick={handleOpenModal}  
+              onClick={handleOpenModal}
             >
               Saiba mais
             </button>
@@ -74,10 +80,10 @@ export default function Novidade() {
         </div>
       </section>
 
-      <Modal 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)} 
-        text={modalText} 
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        text={modalText}
       />
     </>
   );
