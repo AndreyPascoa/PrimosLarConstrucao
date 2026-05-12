@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-    { src: "/carousel/3.png", alt: "Copa do Mundo" },
+    { src: "/carousel/5.png", alt: "Copa do Mundo" },
 ];
 
 export default function CarouselAnimated() {
@@ -20,12 +20,13 @@ export default function CarouselAnimated() {
     };
 
     useEffect(() => {
+        if (images.length <= 1) return;
         const timer = setInterval(nextSlide, 5000);
         return () => clearInterval(timer);
     }, [nextSlide]);
 
     return (
-        <section className="relative w-full h-100 md:h-125 lg:h-150 overflow-hidden bg-gray-200">
+        <section className="group relative w-full aspect-1920/800 max-w-480 mx-auto overflow-hidden bg-gray-200">
             <div
                 className="flex w-full h-full transition-transform duration-700 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -36,42 +37,47 @@ export default function CarouselAnimated() {
                             src={image.src}
                             alt={image.alt}
                             fill
-                            className="object-cover"
+                            className="object-cover" 
                             priority={index === 0}
+                            sizes="(max-width: 1920px) 100vw, 1920px"
                         />
                         <div className="absolute inset-0 bg-black/10"></div>
                     </div>
                 ))}
             </div>
 
-            <button
-                onClick={prevSlide}
-                className="absolute top-1/2 -translate-y-1/2 left-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
-            >
-                <ChevronLeft size={30} />
-            </button>
-
-            <button
-                onClick={nextSlide}
-                className="absolute top-1/2 -translate-y-1/2 right-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-[var(--primarycolor)"
-            >
-                <ChevronRight size={30} />
-            </button>
-
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
-                {images.map((_, index) => (
+            {images.length > 1 && (
+                <>
                     <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`h-3 transition-all duration-300 rounded-full ${
-                            currentIndex === index 
-                            ? "bg-(--primarycolor) w-10" 
-                            : "bg-white/50 w-3 hover:bg-white"
-                        }`}
-                        aria-label={`Ir para slide ${index + 1}`}
-                    />
-                ))}
-            </div>
+                        onClick={prevSlide}
+                        className="absolute top-1/2 -translate-y-1/2 left-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
+                    >
+                        <ChevronLeft size={30} />
+                    </button>
+
+                    <button
+                        onClick={nextSlide}
+                        className="absolute top-1/2 -translate-y-1/2 right-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
+                    >
+                        <ChevronRight size={30} />
+                    </button>
+
+                    <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
+                        {images.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                className={`h-3 transition-all duration-300 rounded-full ${
+                                    currentIndex === index 
+                                    ? "bg-(--primarycolor) w-10" 
+                                    : "bg-white/50 w-3 hover:bg-white"
+                                }`}
+                                aria-label={`Ir para slide ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
         </section>
     );
 }
