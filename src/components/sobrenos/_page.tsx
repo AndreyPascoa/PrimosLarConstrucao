@@ -41,7 +41,7 @@ export default function SobreNos() {
                                 O parceiro ideal para sua reforma ou construção no Cerrado.
                             </h3>
                             <p className="text-gray-600 text-lg leading-relaxed">
-                                A <strong>Primos Lar e Construção</strong> é referência em Sorocaba por oferecer soluções completas do alicerce ao acabamento. Com de 45 anos de mercado, nossa missão é fornecer <strong>materiais de construção de alta qualidade</strong> com um atendimento técnico que entende a necessidade do seu projeto.
+                                A <strong>Primos Lar e Construção</strong> é referência em Sorocaba por oferecer soluções completas do alicerce ao acabamento. Com 45 anos de mercado, nossa missão é fornecer <strong>materiais de construção de alta qualidade</strong> com um atendimento técnico que entende a necessidade do seu projeto.
                             </p>
                             <p className="text-gray-600 text-lg leading-relaxed">
                                 Trabalhamos com as marcas líderes do setor para garantir que sua obra tenha <strong>durabilidade, segurança e o melhor custo-benefício da região</strong>.
