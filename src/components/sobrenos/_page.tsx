@@ -95,7 +95,7 @@ export default function SobreNos() {
                                         <Clock className="text-[#b91c1c] shrink-0" size={24} />
                                         <div>
                                             <p className="font-bold text-slate-900 leading-tight">Horário de Atendimento</p>
-                                            <p className="text-gray-600 text-sm">Segunda a Sexta: 08:00 às 18:00<br/>Sábado: 08:00 às 13:00</p>
+                                            <p className="text-gray-600 text-sm">Segunda a Sexta: 07:30 às 17:30<br/>Sábado: 08:00 às 13:00</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
