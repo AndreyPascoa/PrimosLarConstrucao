@@ -1,7 +1,6 @@
 'use client';
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { CheckCircle2, MapPin, Clock, ShieldCheck } from "lucide-react";
 
 export default function SobreNos() {

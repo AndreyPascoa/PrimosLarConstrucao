@@ -5,8 +5,8 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-    { src: "/carousel/4.png", alt: "Copa do Mundo" },
-    { src: "/carousel/5.png", alt: "Copa do Mundo" },
+    { src: "/carousel/4.jpeg", alt: "Copa do Mundo" },
+    { src: "/carousel/10.jpeg", alt: "Copa do Mundo" },
 ];
 
 export default function CarouselAnimated() {
