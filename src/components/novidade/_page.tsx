@@ -10,20 +10,24 @@ export default function Novidade() {
 
   const handleOpenModal = () => {
     setModalText(
-      `A Promoção da Copa do Mundo 2026 chegou na PRIMOS trazendo ofertas especiais, condições imperdíveis e muitas novidades para nossos clientes!
+      `Em 2026, a PRIMOS Lar e Construção completa 45 anos de história!
 
-      A partir do dia 15/05 você poderá aproveitar preços promocionais em diversos produtos, além de participar de uma campanha cheia de brindes e surpresas exclusivas durante todo o período da promoção.
+      São 45 anos fazendo parte da construção de Sorocaba e região, acompanhando gerações e ajudando nossos clientes a transformar seus projetos em realidade.
 
-      E não para por aí: durante o mês de junho teremos ainda mais novidades, ações especiais e oportunidades para você economizar de verdade enquanto entra no clima da Copa do Mundo 2026.
+      Para celebrar esse momento tão especial, estamos preparando uma programação comemorativa com novidades, ações especiais e momentos para celebrar essa trajetória junto com nossos clientes, parceiros e toda a família PRIMOS.
 
-      Aqui na PRIMOS você encontra qualidade, variedade e vantagens especiais para deixar sua compra ainda melhor. Não perca essa oportunidade e acompanhe nossas redes sociais e nossa loja para ficar por dentro de tudo!`
+      Em breve você poderá conferir todos os detalhes da nossa comemoração.
+
+      Acompanhe nossas redes sociais e fique por dentro de tudo que estamos preparando para os 45 anos da PRIMOS!`
     );
+
     setIsOpen(true);
   };
 
   return (
     <>
       <section className="w-full max-w-6xl mx-auto py-16 px-4">
+        {/* Título */}
         <div className="text-center mb-16">
           <h2 className="text-sm font-bold tracking-widest text-(--primarycolor) uppercase mb-3">
             Novidades na
@@ -33,7 +37,7 @@ export default function Novidade() {
             <div className="mt-2">
               <Image
                 src="/logo2.png"
-                alt="Primos Logo"
+                alt="Primos Lar e Construção"
                 width={350}
                 height={120}
                 className="object-contain"
@@ -44,38 +48,46 @@ export default function Novidade() {
           <div className="h-1.5 w-20 bg-(--primarycolor) mx-auto mt-6 rounded-full"></div>
         </div>
 
+        {/* Conteúdo */}
         <div className="flex flex-col md:flex-row items-center gap-12">
+
+          {/* Imagem */}
           <div className="w-full md:w-1/2 flex justify-center">
             <Image
-              src="/evento/copa.png"
-              alt="Promoção Copa do Mundo Primos"
+              src="/evento/aniversario.png"
+              alt="45 anos da Primos Lar e Construção"
               width={750}
               height={600}
               className="rounded-lg object-contain"
             />
           </div>
 
+          {/* Texto */}
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-left">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#b91c1c] mb-4">
-              COPA DO MUNDO 2026
+
+            <span className="text-sm font-bold tracking-widest text-(--primarycolor) uppercase mb-3">
+              Uma história construída com você
+            </span>
+
+            <h2 className="text-3xl md:text-4xl font-bold text-(--primarycolor) mb-4">
+              45 ANOS DE PRIMOS
             </h2>
 
             <p className="text-gray-700 text-lg leading-relaxed mb-6">
-              Não perca! A partir de 15/05 começa a Promoção da Copa do Mundo 2026
-              aqui na PRIMOS. Serão ofertas exclusivas, preços especiais e o melhor:
-              prêmios imperdíveis que você só encontra nessa campanha.
+              Em 2026, a PRIMOS Lar e Construção completa
+              <strong> 45 anos de história</strong>, fazendo parte da
+              construção de Sorocaba e região.
+            </p>
+
+            <p className="text-gray-700 text-lg leading-relaxed mb-8">
+              E para comemorar essa trajetória, estamos preparando
+              <strong> novidades e ações especiais</strong> para celebrar
+              esse momento junto com nossos clientes.
             </p>
 
             <p className="font-semibold text-(--primarycolor) mb-8 text-xl">
-              Quer mais? Economia de verdade e ainda com brindes!
+              45 anos construindo histórias. E ainda temos muito pela frente.
             </p>
-
-            <button
-              className="px-12 py-3 border-2 border-(--primarycolor) text-(--primarycolor) rounded-full font-bold text-xl hover:bg-(--primarycolor) hover:text-white transition-all duration-300 cursor-pointer shadow-sm"
-              onClick={handleOpenModal}
-            >
-              Saiba mais
-            </button>
           </div>
         </div>
       </section>

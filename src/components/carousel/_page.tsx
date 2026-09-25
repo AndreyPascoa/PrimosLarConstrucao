@@ -5,8 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-    { src: "/carousel/4.jpeg", alt: "Copa do Mundo" },
-    { src: "/carousel/10.jpeg", alt: "Copa do Mundo" },
+    { src: "/carousel/1.png", alt: "Dia das Crianças" },
 ];
 
 export default function CarouselAnimated() {
@@ -38,7 +37,7 @@ export default function CarouselAnimated() {
                             src={image.src}
                             alt={image.alt}
                             fill
-                            className="object-cover" 
+                            className="object-cover"
                             priority={index === 0}
                             sizes="(max-width: 1920px) 100vw, 1920px"
                         />
@@ -63,20 +62,30 @@ export default function CarouselAnimated() {
                         <ChevronRight size={30} />
                     </button>
 
-                    <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
-                        {images.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentIndex(index)}
-                                className={`h-3 transition-all duration-300 rounded-full ${
-                                    currentIndex === index 
-                                    ? "bg-(--primarycolor) w-10" 
-                                    : "bg-white/50 w-3 hover:bg-white"
-                                }`}
-                                aria-label={`Ir para slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
+                    <section className="group relative w-full aspect-1920/800 overflow-hidden bg-white">
+                        <div
+                            className="flex w-full h-full transition-transform duration-700 ease-in-out"
+                            style={{
+                                transform: `translateX(-${currentIndex * 100}%)`,
+                            }}
+                        >
+                            {images.map((image, index) => (
+                                <div
+                                    key={image.src}
+                                    className="relative w-full h-full shrink-0"
+                                >
+                                    <Image
+                                        src={image.src}
+                                        alt={image.alt}
+                                        fill
+                                        className="object-cover"
+                                        priority={index === 0}
+                                        sizes="100vw"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </section>
                 </>
             )}
         </section>
