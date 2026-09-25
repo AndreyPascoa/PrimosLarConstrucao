@@ -63,7 +63,7 @@ export default function SobreNos() {
 
                         <div className="flex gap-12 pt-6 border-t border-gray-200">
                             <div>
-                                <p className="text-4xl font-black text-[#b91c1c]">40+</p>
+                                <p className="text-4xl font-black text-[#b91c1c]">45</p>
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-tighter">Anos de História</p>
                             </div>
                             <div className="h-12 w-px bg-gray-200"></div>
