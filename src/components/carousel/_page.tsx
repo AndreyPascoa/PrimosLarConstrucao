@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
     { src: "/carousel/1.png", alt: "Dia das Crianças" },
+    { src: "/carousel/2.png", alt: "Outubro Rosa" },
 ];
 
 export default function CarouselAnimated() {
