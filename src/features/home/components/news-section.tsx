@@ -15,6 +15,7 @@ export default function Novidade() {
               <Image
                 src="/logo2.png"
                 alt="Primos Lar e Construção"
+                sizes="(max-width: 382px) calc(100vw - 32px), 350px"
                 width={350}
                 height={120}
                 className="object-contain"
@@ -33,6 +34,7 @@ export default function Novidade() {
             <Image
               src="/evento/aniversario.png"
               alt="45 anos da Primos Lar e Construção"
+              sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1152px) 50vw, 552px"
               width={750}
               height={600}
               className="rounded-lg object-contain"

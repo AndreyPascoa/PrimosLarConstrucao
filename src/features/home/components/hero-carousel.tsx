@@ -39,7 +39,7 @@ export default function CarouselAnimated() {
                             alt={image.alt}
                             fill
                             className="object-cover"
-                            priority={index === 0}
+                            preload={index === 0}
                             sizes="(max-width: 1920px) 100vw, 1920px"
                         />
                         <div className="absolute inset-0 bg-black/10"></div>

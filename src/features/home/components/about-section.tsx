@@ -24,7 +24,7 @@ export default function SobreNos() {
                             alt="Fachada Primos Lar e Construção em Sorocaba - Av. Armando Pannunzio"
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            priority
+                            sizes="(max-width: 1023px) 100vw, 640px"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 to-transparent"></div>
                         <div className="absolute bottom-8 left-8 text-white">

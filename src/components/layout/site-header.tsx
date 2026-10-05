@@ -23,7 +23,7 @@ export default function Navbar() {
             <nav className="flex justify-between md:justify-center items-center w-full max-w-6xl md:gap-8">
 
                 <a href="#home" aria-label={`${siteConfig.name} — início`}>
-                    <Image src="/logo.png" alt={siteConfig.name} width={137} height={65} priority />
+                    <Image src="/logo.png" alt={siteConfig.name} width={137} height={65} sizes="137px" />
                 </a>
 
                 <div className="hidden md:flex space-x-6 items-center">
