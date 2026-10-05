@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Titillium_Web } from "next/font/google";
 import "./globals.css";
@@ -9,8 +10,8 @@ const titilliumWeb = Titillium_Web({
 });
 
 export const metadata: Metadata = {
-  title: "Primos Lar e Construção",
-  description: "Loja do ramo de construção civil, especializada em materiais de construção, ferramentas e equipamentos para construção. Oferecemos uma ampla variedade de produtos de alta qualidade para atender às necessidades dos nossos clientes, desde pequenos projetos de reforma até grandes obras de construção. Nossa equipe é dedicada a fornecer um excelente atendimento ao cliente e garantir a satisfação total dos nossos clientes.",
+  title: siteConfig.name,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({

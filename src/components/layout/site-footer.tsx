@@ -1,8 +1,10 @@
+import { siteConfig } from "@/config/site";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle, Mail, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-white pt-20 pb-10 px-6 border-t border-gray-100">
+        <footer id="contato" className="w-full bg-white pt-20 pb-10 px-6 border-t border-gray-100">
             <div className="max-w-7xl mx-auto">
 
                 <div className="text-center mb-16">
@@ -27,7 +29,7 @@ export default function Footer() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <a
-                            href="https://wa.me/551532293388?text=Olá! Gostaria de solicitar um orçamento na Primos."
+                            href={getWhatsAppUrl("Olá! Gostaria de solicitar um orçamento na Primos.")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center p-6 bg-slate-50 rounded-2xl border border-gray-100 hover:border-(--primarycolor) transition-all group shadow-sm hover:shadow-md"
@@ -37,7 +39,7 @@ export default function Footer() {
                             </div>
                             <div className="ml-4 text-left">
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">WhatsApp</p>
-                                <p className="text-gray-900 font-semibold text-lg">(15) 3229-3388</p>
+                                <p className="text-gray-900 font-semibold text-lg">{siteConfig.phone}</p>
                             </div>
                         </a>
 
@@ -47,7 +49,7 @@ export default function Footer() {
                             </div>
                             <div className="ml-4 text-left">
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">E-mail</p>
-                                <p className="text-gray-900 font-semibold">primos@primosmat.com</p>
+                                <p className="text-gray-900 font-semibold">{siteConfig.email}</p>
                             </div>
                         </div>
 
@@ -57,7 +59,7 @@ export default function Footer() {
                             </div>
                             <div className="ml-4 text-left">
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Segunda a Sexta</p>
-                                <p className="text-gray-900 font-semibold text-sm md:text-base">7h30 às 17h30</p>
+                                <p className="text-gray-900 font-semibold text-sm md:text-base">{siteConfig.hours.weekdays}</p>
                             </div>
                         </div>
                         
@@ -67,7 +69,7 @@ export default function Footer() {
                             </div>
                             <div className="ml-4 text-left">
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Sábados</p>
-                                <p className="text-gray-900 font-semibold text-sm md:text-base">8h00 às 12h30</p>
+                                <p className="text-gray-900 font-semibold text-sm md:text-base">{siteConfig.hours.saturday}</p>
                             </div>
                         </div>
 
@@ -78,7 +80,7 @@ export default function Footer() {
                             <div className="ml-4 text-left">
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Nossa Loja</p>
                                 <p className="text-gray-900 font-semibold text-sm md:text-base">
-                                    Av. Dr. Armando Pannunzio, 90 - Cerrado, Sorocaba - SP
+                                    {siteConfig.address}
                                 </p>
                             </div>
                         </div>
@@ -87,7 +89,7 @@ export default function Footer() {
 
                 <div className="mt-20 pt-8 border-t border-gray-100 text-center">
                     <p className="text-gray-400 text-sm">
-                        &copy; {new Date().getFullYear()} Primos Materiais para Construção. Todos os direitos reservados.
+                        &copy; {new Date().getFullYear()} {siteConfig.name}. Todos os direitos reservados.
                     </p>
                 </div>
             </div>

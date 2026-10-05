@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Primos Lar e Construção
 
-## Getting Started
+Site institucional em Next.js, React, TypeScript e Tailwind CSS, com exportação estática para GitHub Pages e pedidos de orçamento via WhatsApp.
 
-First, run the development server:
+## Desenvolvimento
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estrutura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/app`: rotas, layout raiz, metadados e estilos globais.
+- `src/components/layout`: cabeçalho, rodapé e contato flutuante compartilhados.
+- `src/features/home/components`: seções da página inicial; componentes interativos usam `use client`.
+- `src/features/home/data`: categorias e conteúdo da página, separados da apresentação.
+- `src/config/site.ts`: informações públicas da empresa e navegação.
+- `src/lib/whatsapp.ts`: geração de links com mensagens codificadas.
+- `public`: imagens e outros arquivos estáticos.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edite telefone, endereço e horários em `src/config/site.ts`. O horário de sábado foi consolidado em 8h00 às 12h30, conforme a seção de contato original; confirmar com a loja antes do merge.
 
-## Learn More
+## Verificação e publicação
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run check
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O build gera `out/`. O workflow `.github/workflows/deploy.yml` publica ao receber commits na `main`; pull requests executam somente as verificações. Imagens permanecem sem otimização automática para suportar exportação estática; comprima os arquivos antes de adicioná-los.

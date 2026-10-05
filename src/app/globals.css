@@ -2,27 +2,21 @@
 
 :root {
   --background: #ffffff;
+  --foreground: #0f172a;
   --primarycolor: #BA2018;
   --secoundcolor: #63100E;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-titillium-web);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ededed;
-    --foreground: #ededed;
-  }
-}
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-titillium-web), Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -50,4 +44,11 @@ html {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--primarycolor) #f1f1f1;
+}
+section[id], footer[id], #home {
+  scroll-margin-top: 6.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

@@ -1,20 +1,23 @@
-import Carousel from "@/components/carousel/_page";
-import Contato from "@/components/contato/_page";
-import Navbar from "@/components/navbar/_page";
-import Novidade from "@/components/novidade/_page";
-import Produtos from "@/components/produto/_page";
-import SobreNos from "@/components/sobrenos/_page";
-import FloatingWhatsApp from "@/components/whatsapp/_page";
+import HeroCarousel from "@/features/home/components/hero-carousel";
+import NewsSection from "@/features/home/components/news-section";
+import ProductsSection from "@/features/home/components/products-section";
+import AboutSection from "@/features/home/components/about-section";
+import SiteHeader from "@/components/layout/site-header";
+import SiteFooter from "@/components/layout/site-footer";
+import FloatingWhatsApp from "@/components/layout/floating-whatsapp";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <Navbar />
-      <div id="home" className="w-full"><Carousel/></div>
-      <Novidade />
-      <div id="sobre" className="w-full"><SobreNos /></div>
-      <div id="produtos" className="w-full"><Produtos /></div>
-      <div id="contato" className="w-full"><Contato /></div>
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <SiteHeader />
+      <main>
+        <h1 className="sr-only">Primos Lar e Construção — Materiais de construção em Sorocaba</h1>
+        <div id="home" className="w-full"><HeroCarousel /></div>
+        <NewsSection />
+        <AboutSection />
+        <ProductsSection />
+      </main>
+      <SiteFooter />
       <FloatingWhatsApp />
     </div>
   );

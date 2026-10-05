@@ -1,29 +1,6 @@
-'use client';
-
 import Image from "next/image";
-import { useState } from "react";
-import Modal from "../modal/_page";
 
 export default function Novidade() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [modalText, setModalText] = useState("");
-
-  const handleOpenModal = () => {
-    setModalText(
-      `Em 2026, a PRIMOS Lar e Construção completa 45 anos de história!
-
-      São 45 anos fazendo parte da construção de Sorocaba e região, acompanhando gerações e ajudando nossos clientes a transformar seus projetos em realidade.
-
-      Para celebrar esse momento tão especial, estamos preparando uma programação comemorativa com novidades, ações especiais e momentos para celebrar essa trajetória junto com nossos clientes, parceiros e toda a família PRIMOS.
-
-      Em breve você poderá conferir todos os detalhes da nossa comemoração.
-
-      Acompanhe nossas redes sociais e fique por dentro de tudo que estamos preparando para os 45 anos da PRIMOS!`
-    );
-
-    setIsOpen(true);
-  };
-
   return (
     <>
       <section className="w-full max-w-6xl mx-auto py-16 px-4">
@@ -92,11 +69,6 @@ export default function Novidade() {
         </div>
       </section>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        text={modalText}
-      />
     </>
   );
 }
