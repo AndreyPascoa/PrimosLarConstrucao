@@ -50,43 +50,24 @@ export default function CarouselAnimated() {
             {images.length > 1 && (
                 <>
                     <button
+                        type="button"
+                        aria-label="Banner anterior"
                         onClick={prevSlide}
-                        className="absolute top-1/2 -translate-y-1/2 left-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
+                        className="absolute top-1/2 -translate-y-1/2 left-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100 transition-all hover:bg-(--primarycolor)"
                     >
                         <ChevronLeft size={30} />
                     </button>
 
                     <button
+                        type="button"
+                        aria-label="Próximo banner"
                         onClick={nextSlide}
-                        className="absolute top-1/2 -translate-y-1/2 right-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-(--primarycolor)"
+                        className="absolute top-1/2 -translate-y-1/2 right-4 z-30 flex items-center justify-center w-12 h-12 rounded-full bg-white/30 backdrop-blur-md text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100 transition-all hover:bg-(--primarycolor)"
                     >
                         <ChevronRight size={30} />
                     </button>
 
-                    <section className="group relative w-full aspect-1920/800 overflow-hidden bg-white">
-                        <div
-                            className="flex w-full h-full transition-transform duration-700 ease-in-out"
-                            style={{
-                                transform: `translateX(-${currentIndex * 100}%)`,
-                            }}
-                        >
-                            {images.map((image, index) => (
-                                <div
-                                    key={image.src}
-                                    className="relative w-full h-full shrink-0"
-                                >
-                                    <Image
-                                        src={image.src}
-                                        alt={image.alt}
-                                        fill
-                                        className="object-cover"
-                                        priority={index === 0}
-                                        sizes="100vw"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+
                 </>
             )}
         </section>

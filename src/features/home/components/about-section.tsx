@@ -1,28 +1,27 @@
-'use client';
-
+import { siteConfig } from "@/config/site";
 import Image from "next/image";
 import { CheckCircle2, MapPin, Clock, ShieldCheck } from "lucide-react";
 
 export default function SobreNos() {
     return (
-        <section className="w-full bg-slate-50 py-20 px-6" id="sobre-nos">
+        <section className="w-full bg-slate-50 py-20 px-6" id="sobre">
             <div className="max-w-7xl mx-auto">
 
                 <div className="text-center mb-16">
-                    <h1 className="text-sm font-bold tracking-[0.2em] text-[#b91c1c] uppercase mb-3">
+                    <p className="text-sm font-bold tracking-[0.2em] text-(--primarycolor) uppercase mb-3">
                         Desde 1981 em Sorocaba
-                    </h1>
+                    </p>
                     <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
-                        Especialistas em <span className="text-[#b91c1c]">Materiais de Construção</span>
+                        Especialistas em <span className="text-(--primarycolor)">Materiais de Construção</span>
                     </h2>
-                    <div className="h-1.5 w-24 bg-[#b91c1c] mx-auto mt-6 rounded-full"></div>
+                    <div className="h-1.5 w-24 bg-(--primarycolor) mx-auto mt-6 rounded-full"></div>
                 </div>
 
                 <div className="flex flex-col lg:flex-row items-center gap-16 mb-24">
                     <div className="w-full lg:w-1/2 relative h-112.5 rounded-[2.5rem] overflow-hidden shadow-2xl group">
                         <Image
                             src="/fachada_primos.png"
-                            alt="Fachada Primos Ferragens e Construção em Sorocaba - Av. Armando Pannunzio"
+                            alt="Fachada Primos Lar e Construção em Sorocaba - Av. Armando Pannunzio"
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                             priority
@@ -55,7 +54,7 @@ export default function SobreNos() {
                                 "Suporte Técnico Especializado"
                             ].map((item, index) => (
                                 <div key={index} className="flex items-center gap-3 text-slate-800 font-semibold">
-                                    <CheckCircle2 className="text-[#b91c1c]" size={22} />
+                                    <CheckCircle2 className="text-(--primarycolor)" size={22} />
                                     <span>{item}</span>
                                 </div>
                             ))}
@@ -63,12 +62,12 @@ export default function SobreNos() {
 
                         <div className="flex gap-12 pt-6 border-t border-gray-200">
                             <div>
-                                <p className="text-4xl font-black text-[#b91c1c]">45</p>
+                                <p className="text-4xl font-black text-(--primarycolor)">45</p>
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-tighter">Anos de História</p>
                             </div>
                             <div className="h-12 w-px bg-gray-200"></div>
                             <div>
-                                <p className="text-4xl font-black text-[#b91c1c]">1k+</p>
+                                <p className="text-4xl font-black text-(--primarycolor)">1k+</p>
                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-tighter">Itens em Estoque</p>
                             </div>
                         </div>
@@ -80,25 +79,25 @@ export default function SobreNos() {
                         
                         <div className="lg:col-span-1 space-y-8">
                             <div>
-                                <h3 className="text-2xl font-black text-slate-900 mb-6 italic">Onde <span className="text-[#b91c1c]">Estamos</span></h3>
+                                <h3 className="text-2xl font-black text-slate-900 mb-6 italic">Onde <span className="text-(--primarycolor)">Estamos</span></h3>
                                 <div className="space-y-6">
                                     <div className="flex gap-4">
-                                        <MapPin className="text-[#b91c1c] shrink-0" size={24} />
+                                        <MapPin className="text-(--primarycolor) shrink-0" size={24} />
                                         <div>
                                             <p className="font-bold text-slate-900 leading-tight">Nossa Localização</p>
-                                            <p className="text-gray-600 text-sm">Av. Dr. Armando Pannunzio, 90<br/>Cerrado, Sorocaba - SP</p>
-                                            <p className="text-[#b91c1c] text-xs font-bold mt-1">Ao lado do Burger King</p>
+                                            <p className="text-gray-600 text-sm">{siteConfig.address}</p>
+                                            <p className="text-(--primarycolor) text-xs font-bold mt-1">Ao lado do Burger King</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
-                                        <Clock className="text-[#b91c1c] shrink-0" size={24} />
+                                        <Clock className="text-(--primarycolor) shrink-0" size={24} />
                                         <div>
                                             <p className="font-bold text-slate-900 leading-tight">Horário de Atendimento</p>
-                                            <p className="text-gray-600 text-sm">Segunda a Sexta: 07:30 às 17:30<br/>Sábado: 08:00 às 13:00</p>
+                                            <p className="text-gray-600 text-sm">Segunda a Sexta: {siteConfig.hours.weekdays}<br/>Sábado: {siteConfig.hours.saturday}</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
-                                        <ShieldCheck className="text-[#b91c1c] shrink-0" size={24} />
+                                        <ShieldCheck className="text-(--primarycolor) shrink-0" size={24} />
                                         <div>
                                             <p className="font-bold text-slate-900 leading-tight">Compra Segura</p>
                                             <p className="text-gray-600 text-sm">Aceitamos cartões, PIX e faturamento para empresas.</p>
@@ -116,7 +115,7 @@ export default function SobreNos() {
                                 style={{ border: 0 }}
                                 allowFullScreen={true}
                                 loading="lazy"
-                                title="Localização Primos Ferragens Sorocaba"
+                                title="Localização Primos Lar e Construção Sorocaba"
                                 className="filter grayscale hover:grayscale-0 transition-all duration-700"
                             />
                         </div>
