@@ -27,4 +27,4 @@ Edite telefone, endereço e horários em `src/config/site.ts`. O horário de sá
 npm run check
 ```
 
-O build gera `out/`. O workflow `.github/workflows/deploy.yml` publica ao receber commits na `main`; pull requests executam somente as verificações. Imagens permanecem sem otimização automática para suportar exportação estática; comprima os arquivos antes de adicioná-los.
+O build gera `out/`. O workflow `.github/workflows/deploy.yml` publica ao receber commits na `main`; pull requests executam somente as verificações. As imagens usam WebP responsivo pré-gerado em `public/optimized`, compatível com GitHub Pages. O build gera essas versões automaticamente. Para atualizar as imagens durante o desenvolvimento, execute `npm run images:optimize` após alterar os PNGs originais. O loader em `src/lib/image-loader.ts` e o script compartilham as mesmas larguras. Apenas o primeiro banner é pré-carregado; as imagens das demais seções usam carregamento adiado.
