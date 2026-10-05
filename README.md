@@ -5,7 +5,9 @@ Site institucional em Next.js, React, TypeScript e Tailwind CSS, com exportaçã
 ## Desenvolvimento
 
 ```bash
+nvm use
 npm ci
+npm run images:optimize
 npm run dev
 ```
 
@@ -28,3 +30,9 @@ npm run check
 ```
 
 O build gera `out/`. O workflow `.github/workflows/deploy.yml` publica ao receber commits na `main`; pull requests executam somente as verificações. As imagens usam WebP responsivo pré-gerado em `public/optimized`, compatível com GitHub Pages. O build gera essas versões automaticamente. Para atualizar as imagens durante o desenvolvimento, execute `npm run images:optimize` após alterar os PNGs originais. O loader em `src/lib/image-loader.ts` e o script compartilham as mesmas larguras. Apenas o primeiro banner é pré-carregado; as imagens das demais seções usam carregamento adiado.
+
+## Hostinger
+
+Use Node.js 22 e o comando de build `npm run build`. A versão está indicada em `package.json` e `.nvmrc`, e o CI usa a mesma versão. O build usa Webpack explicitamente para evitar depender do comportamento do Turbopack no ambiente de hospedagem. O PostCSS continua configurado para Tailwind CSS 4.
+
+O projeto gera arquivos estáticos em `out/`; publique esse diretório como site estático. `next start` não serve projetos com `output: "export"`. Se o painel exigir uma aplicação Node.js com servidor, será necessário configurar esse modo separadamente.
