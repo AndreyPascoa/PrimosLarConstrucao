@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import Image from "next/image";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle, Mail, MapPin, Clock } from "lucide-react";
 
@@ -91,6 +92,16 @@ export default function Footer() {
                     <p className="text-gray-400 text-sm">
                         &copy; {new Date().getFullYear()} {siteConfig.name}. Todos os direitos reservados.
                     </p>
+                    <a
+                        href="https://orditra.com.br/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Conheça o DAN (abre em uma nova aba)"
+                        className="mt-2 inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 text-sm font-semibold tracking-wide text-slate-500 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-safe:transition-colors"
+                    >
+                        <Image src="/dan-logo.svg" alt="" width={20} height={20} />
+                        <span>DAN</span>
+                    </a>
                 </div>
             </div>
         </footer>
