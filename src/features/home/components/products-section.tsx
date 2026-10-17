@@ -1,8 +1,8 @@
-import { ShoppingCart, Hammer, Zap, Paintbrush, Nut, Droplets, HardHat, Layers } from "lucide-react";
+import { ShoppingCart, Hammer, Zap, Paintbrush, Nut, Droplets, HardHat, Layers, BadgeQuestionMark  } from "lucide-react";
 import { productCategories } from "../data/products";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 
-const categoryIcons = { Hammer, Zap, Paintbrush, Nut, Droplets, HardHat, Layers };
+const categoryIcons = { Hammer, Zap, Paintbrush, Nut, Droplets, HardHat, Layers, BadgeQuestionMark  };
 
 export default function Produtos() {
     return (
@@ -25,7 +25,7 @@ export default function Produtos() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
                     {productCategories.map((produto) => {
-                        const Icon = categoryIcons[produto.icon];
+                        const Icon = categoryIcons[produto.icon.trim() as keyof typeof categoryIcons];
                         return (
                         <div
                             key={produto.id}

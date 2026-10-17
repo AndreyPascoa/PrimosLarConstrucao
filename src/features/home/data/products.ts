@@ -48,4 +48,11 @@ export const productCategories = [
         icon: "HardHat",
         descricao: "Botas com biqueira, luvas de proteção, capacetes, óculos de segurança e máscaras PFF2."
     },
+    {
+        id: 8,
+        nome: "Outros Produtos",
+        categoria: "Outros",
+        icon: "BadgeQuestionMark ",
+        descricao: "Se você não encontrou o que procura, entre em contato conosco. Temos uma variedade de produtos para atender às suas necessidades."
+    },
 ] as const;
