@@ -6,3 +6,27 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Category {
+  id             String @id @default(cuid())
+  name           String
+  slug           String @unique
+  primaryColor   String @default("#BA2018")
+  secondaryColor String @default("#FEE2E2")
+
+  products Product[]
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  imageUrl    String?
+  published   Boolean @default(false)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
