@@ -5,6 +5,7 @@ import AboutSection from "@/features/home/components/about-section";
 import SiteHeader from "@/components/layout/site-header";
 import SiteFooter from "@/components/layout/site-footer";
 import FloatingWhatsApp from "@/components/layout/floating-whatsapp";
+import ShopSection from "@/features/home/components/shop-section";
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ export default function Home() {
         <div id="home" className="w-full"><HeroCarousel /></div>
         <NewsSection />
         <AboutSection />
-        <ProductsSection />
+        <ShopSection />
       </main>
       <SiteFooter />
       <FloatingWhatsApp />

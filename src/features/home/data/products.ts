@@ -56,3 +56,7 @@ export const productCategories = [
         descricao: "Se você não encontrou o que procura, entre em contato conosco. Temos uma variedade de produtos para atender às suas necessidades."
     },
 ] as const;
+
+export const productShop = [
+    
+]
