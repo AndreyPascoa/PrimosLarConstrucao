@@ -6,7 +6,6 @@ import SalesPanel from "./sales-panel";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
-  MessageCircle,
   LayoutDashboard,
   Package,
   Tags,
@@ -520,10 +519,6 @@ export default function AdminPanel({ view }: { view: string }) {
           <span>GESTÃO DO SITE</span>
         </Link>
         <nav aria-label="Administração">
-          <Link href="/crm">
-            <MessageCircle size={19} />
-            Central de atendimento
-          </Link>
           {navigation.map((item) => (
             <Link
               key={item.view}

@@ -130,18 +130,6 @@ export async function salesAdmin(
     }
     if ((method === "POST" && !id) || (method === "PATCH" && id)) {
       const data = sellerSchema.parse(await readJson(request));
-      if (id) {
-        const previous = await db.seller.findUnique({ where: { id } });
-        if (
-          previous &&
-          previous.phone !== data.phone &&
-          (await db.waAccount.findUnique({ where: { sellerId: id } }))
-        )
-          throw new HttpError(
-            409,
-            "Esse número tem histórico no CRM. Cadastre outro vendedor para trocar o número, preservando as conversas.",
-          );
-      }
       return json(
         id
           ? await db.seller.update({ where: { id }, data })
