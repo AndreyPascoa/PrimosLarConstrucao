@@ -1,4 +1,7 @@
 "use client";
+import SellerDistributionChart, {
+  type SellerDistribution,
+} from "./seller-distribution";
 import SalesPanel from "./sales-panel";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
@@ -274,7 +277,15 @@ export default function AdminPanel({ view }: { view: string }) {
   const [settings, setSettings] = useState<Record<string, unknown>>({
     ...defaultSettings,
   });
-  const [stats, setStats] = useState<Record<string, number | boolean>>({});
+  const [stats, setStats] = useState<{
+    products?: number;
+    published?: number;
+    categories?: number;
+    banners?: number;
+    media?: number;
+    storageReady?: boolean;
+    sellers?: SellerDistribution[];
+  }>({});
   const [settingsReady, setSettingsReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -628,11 +639,27 @@ export default function AdminPanel({ view }: { view: string }) {
                     ].map((item) => (
                       <div className="stat-card" key={item.key}>
                         <item.icon size={22} />
-                        <strong>{Number(stats[item.key] || 0)}</strong>
+                        <strong>
+                          {Number(
+                            stats[
+                              item.key as
+                                | "products"
+                                | "published"
+                                | "categories"
+                                | "banners"
+                            ] || 0,
+                          )}
+                        </strong>
                         <span>{item.label}</span>
                       </div>
                     ))}
                   </div>
+                  {!error && (
+                    <SellerDistributionChart
+                      sellers={stats.sellers || []}
+                      onRefresh={() => void load()}
+                    />
+                  )}
                   <div className="admin-welcome">
                     <div>
                       <span className="admin-eyebrow">SEU PRÓXIMO PASSO</span>

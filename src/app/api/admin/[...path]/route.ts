@@ -60,13 +60,22 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET" && !id) {
       if (resource === "dashboard") {
-        const [products, published, categories, banners, media] =
+        const [products, published, categories, banners, media, sellers] =
           await Promise.all([
             db.product.count(),
             db.product.count({ where: { published: true } }),
             db.category.count(),
             db.banner.count(),
             db.media.count(),
+            db.seller.findMany({
+              select: {
+                id: true,
+                name: true,
+                active: true,
+                _count: { select: { quotes: true } },
+              },
+              orderBy: [{ name: "asc" }, { id: "asc" }],
+            }),
           ]);
         return json({
           products,
@@ -74,6 +83,12 @@ async function handle(request: Request, context: Context) {
           categories,
           banners,
           media,
+          sellers: sellers.map((s) => ({
+            id: s.id,
+            name: s.name,
+            active: s.active,
+            count: s._count.quotes,
+          })),
           storageReady:
             !!process.env.SUPABASE_URL &&
             !!process.env.SUPABASE_SERVICE_ROLE_KEY,

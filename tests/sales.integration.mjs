@@ -127,6 +127,16 @@ assert.equal(
   ),
   true,
 );
+const dashboard = (await call("/api/admin/dashboard")).data;
+assert.equal(
+  dashboard.sellers.reduce((sum, s) => sum + s.count, 0),
+  7,
+);
+for (const s of counts)
+  assert.equal(
+    dashboard.sellers.find((row) => row.id === s.id).count,
+    s._count.quotes,
+  );
 const invalid = request();
 invalid.items[0].quantity = 0;
 assert.equal(
