@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { usePublicContent } from "./public-content";
 import { useRef, useState } from "react";
+import CategoryProductRail from "./category-product-rail";
 import ProductQuantity from "./product-quantity";
 import type { ProductItem } from "@/lib/content";
 import { Package, X } from "lucide-react";
@@ -23,13 +24,18 @@ export default function Vendas({
     usePublicContent();
   const [useFilter, setUseFilter] = useState("Todos");
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const normalize = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("pt-BR")
+      .trim();
   const produtosFiltrados = products.filter(
     (p) =>
       (useFilter === "Todos" || p.categoryId === useFilter) &&
-      `${p.name} ${p.description}`
-        .toLocaleLowerCase("pt-BR")
-        .includes(search.toLocaleLowerCase("pt-BR")),
+      normalize(
+        `${p.name} ${p.description} ${p.category?.name || ""}`,
+      ).includes(normalize(search)),
   );
   const filtros = [
     {
@@ -64,12 +70,14 @@ export default function Vendas({
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              setPage(1);
             }}
             className="w-full border border-gray-200 rounded-full bg-slate-50 px-5 py-3"
           />
         </label>
-        <div className="flex flex-wrap w-full gap-3 mb-8">
+        <nav
+          className="catalog-category-nav"
+          aria-label="Filtrar por categoria"
+        >
           {filtros.map((item) => {
             const cores = {
               primaria: item.primaryColor,
@@ -83,7 +91,6 @@ export default function Vendas({
                 type="button"
                 onClick={() => {
                   setUseFilter(item.id);
-                  setPage(1);
                 }}
                 aria-pressed={selecionado}
                 style={{
@@ -99,47 +106,36 @@ export default function Vendas({
               </button>
             );
           })}
-        </div>
+        </nav>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
-          {produtosFiltrados.slice((page - 1) * 12, page * 12).map((item) => (
-            <article
-              key={item.id}
-              className="group bg-slate-50 rounded-[2.5rem] p-4 border border-gray-100 hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center"
-            >
-              <button
-                type="button"
-                className="product-details-trigger"
-                onClick={() => openProduct(item)}
-                aria-label={`Ver detalhes de ${item.name}`}
-              >
-                <div className="relative w-full h-64">
-                  {item.imageUrl ? (
-                    <Image
-                      src={item.imageUrl}
-                      alt=""
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 640px) 100vw, 400px"
-                    />
-                  ) : (
-                    <Package
-                      size={64}
-                      className="m-auto h-full text-slate-300"
-                    />
-                  )}
-                </div>
-                <h3 className="text-l font-black text-(--primarycolor) mt-3 mb-2">
-                  {item.name}
-                </h3>
-              </button>
-              <ProductQuantity
-                name={item.name}
-                quantity={quantities[item.id] || 0}
-                onChange={(quantity) => onQuantity(item.id, quantity)}
+        {catalogAvailable && produtosFiltrados.length > 0 && (
+          <div className="catalog-results-heading">
+            <p aria-live="polite">
+              {produtosFiltrados.length} produto(s)
+              {search.trim() ? ` para “${search.trim()}”` : " no catálogo"}
+            </p>
+            <span>Use as setas ou deslize para ver mais</span>
+          </div>
+        )}
+        <div className="category-product-sections">
+          {categories
+            .map((category) => ({
+              category,
+              items: produtosFiltrados.filter(
+                (product) => product.categoryId === category.id,
+              ),
+            }))
+            .filter((group) => group.items.length > 0)
+            .map(({ category, items }) => (
+              <CategoryProductRail
+                key={`${category.id}:${normalize(search)}:${useFilter}`}
+                category={category}
+                products={items}
+                quantities={quantities}
+                onQuantity={onQuantity}
+                onOpen={openProduct}
               />
-            </article>
-          ))}
+            ))}
         </div>
 
         {!catalogAvailable && (
@@ -150,24 +146,20 @@ export default function Vendas({
         )}
         {catalogAvailable && !produtosFiltrados.length && (
           <p role="status" className="text-center py-10">
-            Nenhum produto encontrado.
+            Nenhum produto encontrado.{" "}
+            {(search || useFilter !== "Todos") && (
+              <button
+                type="button"
+                className="catalog-clear"
+                onClick={() => {
+                  setSearch("");
+                  setUseFilter("Todos");
+                }}
+              >
+                Limpar busca e filtros
+              </button>
+            )}
           </p>
-        )}
-        {produtosFiltrados.length > 12 && (
-          <div className="flex justify-center items-center gap-4 mt-8">
-            <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-              Anterior
-            </button>
-            <span>
-              {page} / {Math.ceil(produtosFiltrados.length / 12)}
-            </span>
-            <button
-              disabled={page * 12 >= produtosFiltrados.length}
-              onClick={() => setPage(page + 1)}
-            >
-              Próxima
-            </button>
-          </div>
         )}
         <div className="mt-16 text-center border-t border-gray-100 pt-10">
           <p className="text-gray-500 italic text-sm">
@@ -183,6 +175,7 @@ export default function Vendas({
         ref={dialog}
         className="product-details-dialog"
         aria-labelledby="product-details-title"
+        onClose={() => setSelected(null)}
         onClick={(e) => {
           if (e.target === e.currentTarget) dialog.current?.close();
         }}
