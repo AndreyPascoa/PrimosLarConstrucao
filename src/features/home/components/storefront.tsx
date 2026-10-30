@@ -255,10 +255,12 @@ export default function Storefront({ content }: { content: PublicContent }) {
                   disabled={sending}
                   onClick={() => void sendQuote()}
                 >
-                  <MessageCircle size={19} />
-                  {sending
+                  <MessageCircle color="white" size={19} />
+                  <span className="text-white no-underline">
+                     {sending
                     ? "Selecionando vendedor…"
                     : "Enviar orçamento pelo WhatsApp"}
+                  </span>
                 </button>
                 {quoteError && <p role="alert">{quoteError}</p>}
                 <button
@@ -267,7 +269,9 @@ export default function Storefront({ content }: { content: PublicContent }) {
                       setCart({});
                   }}
                 >
-                  Limpar lista
+                  <span className="text-black">
+                    Limpar lista
+                  </span>
                 </button>
               </div>
             </>

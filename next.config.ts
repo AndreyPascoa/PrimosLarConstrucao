@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["10.10.10.66"],
   // Admin and database routes require a Node.js server.
   images: { unoptimized: true },
   async headers() {
