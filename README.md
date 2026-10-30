@@ -97,3 +97,21 @@ Sem banco acessível, o catálogo público mostra indisponibilidade com contato 
 - `/api/admin/media`: GET/POST (multipart, campo `file`); DELETE em `/:id`.
 
 Todas as rotas administrativas, exceto login, exigem sessão. As mutações validam `Origin` contra `APP_URL`. As respostas privadas usam `Cache-Control: no-store`.
+
+## Rodízio de vendedores e controle de orçamentos
+
+Após atualizar o código, execute `npm run db:migrate` antes de iniciar a versão. A migração `20261030_seller_rotation` cria `Seller` e `Quote`, com RLS e acesso somente pelo servidor. Não é necessário apagar dados nem executar novamente o seed.
+
+No painel, abra **Vendedores e horários** (`/admin/vendedores`). Cadastre nome, WhatsApp com DDI 55 e DDD e os horários de cada dia: entrada, saída para almoço, retorno e saída. O formulário começa com um exemplo de segunda a sexta de 08h às 18h, almoço 12h–13h: ajuste para a regra real de cada pessoa. Desative dias sem atendimento e desmarque intervalo nos dias sem almoço. Todos os horários são de Brasília (`America/Sao_Paulo`); turnos devem terminar no mesmo dia. Vendedores inativos permanecem no histórico e não recebem novos encaminhamentos.
+
+Ao enviar a lista pelo catálogo, o servidor considera somente vendedores ativos e dentro do horário, excluindo almoço e folgas. Entre os disponíveis, escolhe quem está há mais tempo sem um novo encaminhamento. Um bloqueio transacional PostgreSQL serializa a escolha entre instâncias. Repetir a mesma solicitação não aumenta a contagem; o navegador reutiliza a referência da mesma lista na aba durante até 15 minutos. Se o vendedor anterior já estiver indisponível, a página pede uma nova tentativa sem encaminhar para o número fora do horário. Sem ninguém disponível, mostra um aviso e preserva a lista.
+
+O site registra os itens, quantidades, nome e número do vendedor naquele momento, data, referência e mensagem antes de abrir o WhatsApp. **Encaminhado não é confirmação de envio, recebimento ou leitura**: o cliente ainda precisa enviar a mensagem no WhatsApp. Para confirmação automática seria necessária uma integração própria com a plataforma do WhatsApp. Os botões institucionais de contato geral continuam usando o número da loja; o rodízio é aplicado ao envio da lista de orçamento.
+
+Em **Orçamentos** (`/admin/orcamentos`), consulte contagem por vendedor, histórico paginado, produtos e quantidades, filtre por vendedor e registre andamento/observações. Os estados são Encaminhado, Em atendimento, Concluído e Cancelado. A contagem total representa encaminhamentos registrados, inclusive os posteriormente cancelados.
+
+Testes adicionais: `npm test` cobre horários/intervalos e validação. Em implantação descartável, `node tests/sales.integration.mjs` usa as mesmas variáveis `TEST_BASE_URL`, `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD`, `TEST_ALLOW_WRITES=isolated`; cria vendedores e orçamentos de teste. Nunca execute esse teste no banco real.
+# Retirada do CRM experimental
+
+Esta versão mantém o site, o painel administrativo e o rodízio de orçamentos. As rotas do CRM e o conector do WhatsApp foram retirados. A migração `20261030_whatsapp_crm` permanece somente para conservar o histórico dos bancos em que ela já foi aplicada; nenhuma tabela ou conversa existente é apagada. Não execute reset do banco para atualizar. O encaminhamento de orçamentos continua abrindo o WhatsApp do vendedor disponível.
+

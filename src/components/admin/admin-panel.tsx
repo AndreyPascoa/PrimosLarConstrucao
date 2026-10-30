@@ -1,4 +1,8 @@
 "use client";
+import SellerDistributionChart, {
+  type SellerDistribution,
+} from "./seller-distribution";
+import SalesPanel from "./sales-panel";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -80,6 +84,18 @@ const navigation = [
     href: "/admin/aparencia",
     label: "Aparência",
     icon: Palette,
+  },
+  {
+    view: "sellers",
+    href: "/admin/vendedores",
+    label: "Vendedores e horários",
+    icon: Tags,
+  },
+  {
+    view: "quotes",
+    href: "/admin/orcamentos",
+    label: "Orçamentos",
+    icon: FileText,
   },
 ];
 const fields: Record<string, Field[]> = {
@@ -261,7 +277,15 @@ export default function AdminPanel({ view }: { view: string }) {
   const [settings, setSettings] = useState<Record<string, unknown>>({
     ...defaultSettings,
   });
-  const [stats, setStats] = useState<Record<string, number | boolean>>({});
+  const [stats, setStats] = useState<{
+    products?: number;
+    published?: number;
+    categories?: number;
+    banners?: number;
+    media?: number;
+    storageReady?: boolean;
+    sellers?: SellerDistribution[];
+  }>({});
   const [settingsReady, setSettingsReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -275,9 +299,14 @@ export default function AdminPanel({ view }: { view: string }) {
   const [dirty, setDirty] = useState(false);
   const [menu, setMenu] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
+  const isSales = view === "sellers" || view === "quotes";
   const isSettings = view === "content" || view === "appearance";
   const active = navigation.find((n) => n.view === view)!;
   async function load() {
+    if (isSales) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -584,6 +613,7 @@ export default function AdminPanel({ view }: { view: string }) {
               {notice}
             </div>
           )}
+          {isSales && <SalesPanel view={view} />}
           {loading ? (
             <div className="admin-empty" aria-busy="true">
               Carregando conteúdo…
@@ -609,11 +639,27 @@ export default function AdminPanel({ view }: { view: string }) {
                     ].map((item) => (
                       <div className="stat-card" key={item.key}>
                         <item.icon size={22} />
-                        <strong>{Number(stats[item.key] || 0)}</strong>
+                        <strong>
+                          {Number(
+                            stats[
+                              item.key as
+                                | "products"
+                                | "published"
+                                | "categories"
+                                | "banners"
+                            ] || 0,
+                          )}
+                        </strong>
                         <span>{item.label}</span>
                       </div>
                     ))}
                   </div>
+                  {!error && (
+                    <SellerDistributionChart
+                      sellers={stats.sellers || []}
+                      onRefresh={() => void load()}
+                    />
+                  )}
                   <div className="admin-welcome">
                     <div>
                       <span className="admin-eyebrow">SEU PRÓXIMO PASSO</span>
@@ -680,7 +726,7 @@ export default function AdminPanel({ view }: { view: string }) {
                   </div>
                 </form>
               )}
-              {!isSettings && view !== "dashboard" && (
+              {!isSales && !isSettings && view !== "dashboard" && (
                 <>
                   {view === "products" && !categories.length && !error && (
                     <div className="admin-panel">

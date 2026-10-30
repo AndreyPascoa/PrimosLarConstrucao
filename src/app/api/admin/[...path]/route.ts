@@ -1,3 +1,4 @@
+import { salesAdmin } from "@/server/sales";
 import { getDb } from "@/server/db/prisma";
 import { login, logout, requireAdmin } from "@/server/auth";
 import {
@@ -21,6 +22,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ path: string[] }> };
 async function handle(request: Request, context: Context) {
+  const nativeLogin =
+    request.method === "POST" &&
+    new URL(request.url).pathname === "/api/admin/login" &&
+    request.headers.get("content-type")?.split(";")[0].trim() ===
+      "application/x-www-form-urlencoded";
+  const redirectLogin = (path: string) =>
+    new Response(null, {
+      status: 303,
+      headers: { Location: path, "Cache-Control": "no-store" },
+    });
   try {
     const { path } = await context.params;
     const [resource, id] = path;
@@ -28,11 +39,20 @@ async function handle(request: Request, context: Context) {
     const method = request.method;
     if (method !== "GET") checkOrigin(request);
     if (resource === "login" && method === "POST" && !id) {
-      const data = loginSchema.parse(await readJson(request));
+      const body = nativeLogin
+        ? Object.fromEntries(
+            new URLSearchParams(
+              new TextDecoder().decode(await readLimited(request, 32768)),
+            ),
+          )
+        : await readJson(request);
+      const data = loginSchema.parse(body);
       await login(data.email, data.password);
-      return json({ ok: true });
+      return nativeLogin ? redirectLogin("/admin") : json({ ok: true });
     }
     await requireAdmin();
+    if (["sellers", "quotes"].includes(resource))
+      return await salesAdmin(request, resource, id);
     const db = getDb();
     if (resource === "logout" && method === "POST" && !id) {
       await logout();
@@ -40,13 +60,22 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET" && !id) {
       if (resource === "dashboard") {
-        const [products, published, categories, banners, media] =
+        const [products, published, categories, banners, media, sellers] =
           await Promise.all([
             db.product.count(),
             db.product.count({ where: { published: true } }),
             db.category.count(),
             db.banner.count(),
             db.media.count(),
+            db.seller.findMany({
+              select: {
+                id: true,
+                name: true,
+                active: true,
+                _count: { select: { quotes: true } },
+              },
+              orderBy: [{ name: "asc" }, { id: "asc" }],
+            }),
           ]);
         return json({
           products,
@@ -54,6 +83,12 @@ async function handle(request: Request, context: Context) {
           categories,
           banners,
           media,
+          sellers: sellers.map((s) => ({
+            id: s.id,
+            name: s.name,
+            active: s.active,
+            count: s._count.quotes,
+          })),
           storageReady:
             !!process.env.SUPABASE_URL &&
             !!process.env.SUPABASE_SERVICE_ROLE_KEY,
@@ -190,7 +225,10 @@ async function handle(request: Request, context: Context) {
     }
     throw new HttpError(404, "Rota não encontrada.");
   } catch (error) {
-    return failure(error);
+    const response = failure(error);
+    return nativeLogin
+      ? redirectLogin(`/admin/login?error=${response.status}`)
+      : response;
   }
 }
 export {
