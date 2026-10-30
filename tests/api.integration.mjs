@@ -214,3 +214,34 @@ assert.equal((await call("/api/admin/products")).response.status, 401);
 console.log(
   "Integration passed: authorization, CSRF, login/logout, CRUD, FK protection, publication, settings persistence.",
 );
+
+// Native form login must work without hydration and keep credentials out of URLs.
+const formHeaders = {
+  Origin: base,
+  "Content-Type": "application/x-www-form-urlencoded",
+};
+const formLogin = async (value, origin = base) =>
+  fetch(base + "/api/admin/login", {
+    method: "POST",
+    redirect: "manual",
+    headers: { ...formHeaders, Origin: origin },
+    body: new URLSearchParams({ email, password: value }),
+  });
+const invalidForm = await formLogin("incorrect-password");
+assert.equal(invalidForm.status, 303);
+assert.equal(invalidForm.headers.get("location"), "/admin/login?error=401");
+assert.equal(
+  (await formLogin(password, "https://foreign.invalid")).headers.get(
+    "location",
+  ),
+  "/admin/login?error=403",
+);
+const nativeLogin = await formLogin(password);
+assert.equal(nativeLogin.status, 303);
+assert.equal(nativeLogin.headers.get("location"), "/admin");
+cookie = nativeLogin.headers.get("set-cookie").split(";")[0];
+assert.equal((await call("/api/admin/products")).response.status, 200);
+assert.equal((await call("/api/admin/logout", "POST")).response.status, 200);
+console.log(
+  "Native POST login passed: redirect, session, invalid credentials and CSRF protection.",
+);

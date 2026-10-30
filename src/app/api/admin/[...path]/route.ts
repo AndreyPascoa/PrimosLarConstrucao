@@ -21,6 +21,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ path: string[] }> };
 async function handle(request: Request, context: Context) {
+  const nativeLogin =
+    request.method === "POST" &&
+    new URL(request.url).pathname === "/api/admin/login" &&
+    request.headers.get("content-type")?.split(";")[0].trim() ===
+      "application/x-www-form-urlencoded";
+  const redirectLogin = (path: string) =>
+    new Response(null, {
+      status: 303,
+      headers: { Location: path, "Cache-Control": "no-store" },
+    });
   try {
     const { path } = await context.params;
     const [resource, id] = path;
@@ -28,9 +38,16 @@ async function handle(request: Request, context: Context) {
     const method = request.method;
     if (method !== "GET") checkOrigin(request);
     if (resource === "login" && method === "POST" && !id) {
-      const data = loginSchema.parse(await readJson(request));
+      const body = nativeLogin
+        ? Object.fromEntries(
+            new URLSearchParams(
+              new TextDecoder().decode(await readLimited(request, 32768)),
+            ),
+          )
+        : await readJson(request);
+      const data = loginSchema.parse(body);
       await login(data.email, data.password);
-      return json({ ok: true });
+      return nativeLogin ? redirectLogin("/admin") : json({ ok: true });
     }
     await requireAdmin();
     const db = getDb();
@@ -190,7 +207,10 @@ async function handle(request: Request, context: Context) {
     }
     throw new HttpError(404, "Rota não encontrada.");
   } catch (error) {
-    return failure(error);
+    const response = failure(error);
+    return nativeLogin
+      ? redirectLogin(`/admin/login?error=${response.status}`)
+      : response;
   }
 }
 export {

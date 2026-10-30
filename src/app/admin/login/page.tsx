@@ -1,35 +1,22 @@
-"use client";
-import { useState, type FormEvent } from "react";
 import { LockKeyhole, ArrowRight } from "lucide-react";
-export default function Login() {
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError("");
-    const form = new FormData(event.currentTarget);
-    try {
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.get("email"),
-          password: form.get("password"),
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
-      window.location.assign("/admin");
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "Não foi possível entrar. Tente novamente.",
-      );
-      setBusy(false);
-    }
-  }
+export const dynamic = "force-dynamic";
+export default async function Login({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error: code } = await searchParams;
+  const errors: Record<string, string> = {
+    "400": "Confira o e-mail e a senha informados.",
+    "401": "E-mail ou senha incorretos.",
+    "403": "Endereço de acesso inválido. Confira APP_URL no servidor.",
+    "429": "Muitas tentativas. Aguarde até 15 minutos.",
+    "503":
+      "Não foi possível entrar. Confira as configurações do administrador, a conexão e as migrações do banco no servidor.",
+  };
+  const error = code
+    ? errors[code] || "Não foi possível entrar. Tente novamente."
+    : "";
   return (
     <main className="admin-login">
       <div className="login-brand">
@@ -49,7 +36,7 @@ export default function Login() {
         </div>
         <h2>Bem-vindo de volta</h2>
         <p>Entre com sua conta de administrador.</p>
-        <form onSubmit={submit}>
+        <form method="post" action="/api/admin/login">
           <label>
             E-mail
             <input
@@ -75,8 +62,8 @@ export default function Login() {
               {error}
             </p>
           )}
-          <button className="admin-primary" disabled={busy}>
-            {busy ? "Entrando…" : "Entrar no painel"}
+          <button type="submit" className="admin-primary">
+            Entrar no painel
             <ArrowRight size={18} />
           </button>
         </form>
