@@ -1,13 +1,18 @@
 import type { NextConfig } from "next";
-
 const nextConfig: NextConfig = {
-  output: "export",
-  images: {
-    loader: "custom",
-    loaderFile: "./src/lib/image-loader.ts",
-    deviceSizes: [640, 768, 1024, 1280, 1920],
-    imageSizes: [320, 480],
+  // Admin and database routes require a Node.js server.
+  images: { unoptimized: true },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
   },
 };
-
 export default nextConfig;

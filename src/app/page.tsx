@@ -1,24 +1,45 @@
-import HeroCarousel from "@/features/home/components/hero-carousel";
-import NewsSection from "@/features/home/components/news-section";
-import ProductsSection from "@/features/home/components/products-section";
-import AboutSection from "@/features/home/components/about-section";
-import SiteHeader from "@/components/layout/site-header";
-import SiteFooter from "@/components/layout/site-footer";
-import FloatingWhatsApp from "@/components/layout/floating-whatsapp";
-
-export default function Home() {
+import type { Metadata } from "next";
+import Storefront from "@/features/home/components/storefront";
+import { getPublicContent } from "@/server/content";
+import "./storefront.css";
+export const dynamic = "force-dynamic";
+export async function generateMetadata(): Promise<Metadata> {
+  const { settings } = await getPublicContent();
+  return {
+    ...(process.env.APP_URL
+      ? { alternates: { canonical: process.env.APP_URL } }
+      : {}),
+    title: settings.name,
+    description: settings.description,
+    openGraph: {
+      title: settings.name,
+      description: settings.description,
+      locale: "pt_BR",
+      type: "website",
+    },
+  };
+}
+export default async function Home() {
+  const content = await getPublicContent();
+  const business = {
+    "@context": "https://schema.org",
+    "@type": "HardwareStore",
+    name: content.settings.name,
+    description: content.settings.description,
+    telephone: content.settings.phone,
+    email: content.settings.email,
+    address: content.settings.address,
+    ...(process.env.APP_URL ? { url: process.env.APP_URL } : {}),
+  };
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <SiteHeader />
-      <main>
-        <h1 className="sr-only">Primos Lar e Construção — Materiais de construção em Sorocaba</h1>
-        <div id="home" className="w-full"><HeroCarousel /></div>
-        <NewsSection />
-        <AboutSection />
-        <ProductsSection />
-      </main>
-      <SiteFooter />
-      <FloatingWhatsApp />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(business).replace(/</g, "\\u003c"),
+        }}
+      />
+      <Storefront content={content} />
+    </>
   );
 }

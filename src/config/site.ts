@@ -13,6 +13,6 @@ export const siteConfig = {
 export const navigationItems = [
   { href: "#home", label: "HOME" },
   { href: "#sobre", label: "SOBRE NÓS" },
-  { href: "#produtos", label: "PRODUTOS" },
+  { href: "#shop", label: "ORÇAMENTO" },
   { href: "#contato", label: "CONTATO" },
 ] as const;
