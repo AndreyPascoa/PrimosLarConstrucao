@@ -1,3 +1,4 @@
+import { salesAdmin } from "@/server/sales";
 import { getDb } from "@/server/db/prisma";
 import { login, logout, requireAdmin } from "@/server/auth";
 import {
@@ -50,6 +51,8 @@ async function handle(request: Request, context: Context) {
       return nativeLogin ? redirectLogin("/admin") : json({ ok: true });
     }
     await requireAdmin();
+    if (["sellers", "quotes"].includes(resource))
+      return await salesAdmin(request, resource, id);
     const db = getDb();
     if (resource === "logout" && method === "POST" && !id) {
       await logout();

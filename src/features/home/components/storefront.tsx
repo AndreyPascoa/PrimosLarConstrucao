@@ -25,9 +25,14 @@ export default function Storefront({ content }: { content: PublicContent }) {
   const [cart, setCart] = useState<Cart>({});
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [quoteError, setQuoteError] = useState("");
   const cartDialog = useRef<HTMLDialogElement>(null);
-  const wa = (text: string) =>
-    `https://wa.me/${s.whatsappNumber}?text=${encodeURIComponent(text)}`;
+  const requestCache = useRef<{
+    key: string;
+    signature: string;
+    createdAt: number;
+  } | null>(null);
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("primos-quote") || "{}");
@@ -62,7 +67,74 @@ export default function Storefront({ content }: { content: PublicContent }) {
       return next;
     });
   }
-  const quote = `Olá! Gostaria de um orçamento dos seguintes produtos:\n\n${cartProducts.map((p) => `${cart[p.id]} × ${p.name}`).join("\n")}\n\nPodem confirmar os valores, a disponibilidade e as opções de entrega?`;
+  async function sendQuote() {
+    if (sending) return;
+    setSending(true);
+    setQuoteError("");
+    const items = cartProducts
+      .map((p) => ({ id: p.id, quantity: cart[p.id] }))
+      .sort((a, b) => a.id.localeCompare(b.id));
+    const signature = JSON.stringify(items);
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 15) | 64;
+    bytes[8] = (bytes[8] & 63) | 128;
+    const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join(
+      "",
+    );
+    let requestKey = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+    if (
+      requestCache.current?.signature === signature &&
+      Date.now() - requestCache.current.createdAt < 15 * 60 * 1000
+    )
+      requestKey = requestCache.current.key;
+    try {
+      const cached = JSON.parse(
+        sessionStorage.getItem("primos-quote-request") || "null",
+      );
+      if (
+        cached?.signature === signature &&
+        Date.now() - cached.createdAt < 15 * 60 * 1000
+      )
+        requestKey = cached.key;
+      sessionStorage.setItem(
+        "primos-quote-request",
+        JSON.stringify({ key: requestKey, signature, createdAt: Date.now() }),
+      );
+    } catch {}
+    requestCache.current = {
+      key: requestKey,
+      signature,
+      createdAt: Date.now(),
+    };
+    try {
+      const response = await fetch("/api/orcamentos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestKey, items }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 409) {
+          requestCache.current = null;
+          try {
+            sessionStorage.removeItem("primos-quote-request");
+          } catch {}
+        }
+        throw Error(
+          data.error || "Não foi possível encaminhar. Tente novamente.",
+        );
+      }
+      window.location.assign(data.url);
+    } catch (error) {
+      setQuoteError(
+        error instanceof Error
+          ? error.message
+          : "Falha na conexão. Sua lista continua salva.",
+      );
+    } finally {
+      setSending(false);
+    }
+  }
   return (
     <PublicContentProvider value={content}>
       <div
@@ -174,25 +246,21 @@ export default function Storefront({ content }: { content: PublicContent }) {
               </div>
               <div className="cart-footer">
                 <p>
-                  Enviaremos a lista ao WhatsApp da loja. A equipe confirma os
-                  valores e a disponibilidade antes da compra.
+                  O site seleciona um vendedor disponível e encaminha a lista ao
+                  WhatsApp dele. A equipe confirma os valores e a
+                  disponibilidade antes da compra.
                 </p>
-                {quote.length > 3500 ? (
-                  <p role="alert">
-                    Sua lista está muito longa para um único envio. Divida os
-                    produtos em dois orçamentos.
-                  </p>
-                ) : (
-                  <a
-                    className="store-primary"
-                    href={wa(quote)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <MessageCircle size={19} />
-                    Enviar orçamento pelo WhatsApp
-                  </a>
-                )}
+                <button
+                  className="store-primary"
+                  disabled={sending}
+                  onClick={() => void sendQuote()}
+                >
+                  <MessageCircle size={19} />
+                  {sending
+                    ? "Selecionando vendedor…"
+                    : "Enviar orçamento pelo WhatsApp"}
+                </button>
+                {quoteError && <p role="alert">{quoteError}</p>}
                 <button
                   onClick={() => {
                     if (window.confirm("Limpar todos os itens da lista?"))

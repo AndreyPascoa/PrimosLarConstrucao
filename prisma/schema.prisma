@@ -70,3 +70,32 @@ model Media {
   path      String   @unique
   createdAt DateTime @default(now())
 }
+
+model Seller {
+  id String @id @default(cuid())
+  name String
+  phone String
+  active Boolean @default(true)
+  schedule Json
+  lastAssignedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quotes Quote[]
+}
+
+model Quote {
+  id String @id @default(cuid())
+  requestKey String @unique
+  sellerId String
+  seller Seller @relation(fields: [sellerId], references: [id])
+  sellerName String
+  sellerPhone String
+  items Json
+  message String
+  status String @default("forwarded")
+  notes String @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([createdAt])
+  @@index([sellerId, createdAt])
+}

@@ -793,3 +793,82 @@
     height: 120px;
   }
 }
+.sales-panel {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.sales-seller-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+.sales-panel .admin-panel {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.sales-panel .admin-panel p {
+  margin: 12px 0;
+  line-height: 1.7;
+}
+.sales-panel label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.sales-panel input:not([type="checkbox"]),
+.sales-panel select,
+.sales-panel textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dce2e9;
+  border-radius: 10px;
+  padding: 10px;
+  background: white;
+}
+.sales-panel .checkbox-label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 16px 0;
+}
+.seller-dialog {
+  width: min(760px, calc(100% - 24px));
+}
+.seller-day {
+  border-top: 1px solid #e2e8f0;
+  padding: 14px 0;
+}
+.seller-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+.seller-times .checkbox-label {
+  grid-column: 1/-1;
+}
+.sales-quote header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sales-quote header strong {
+  font-size: 14px;
+}
+.sales-quote form {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+.sales-quote summary {
+  cursor: pointer;
+  color: var(--primarycolor);
+  font-weight: 600;
+}
+.sales-quote ul {
+  padding: 12px 20px;
+  list-style: disc;
+}

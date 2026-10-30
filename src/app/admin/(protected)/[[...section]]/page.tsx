@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import AdminPanel from "@/components/admin/admin-panel";
 const pages: Record<string, string> = {
   "": "dashboard",
+  vendedores: "sellers",
+  orcamentos: "quotes",
   produtos: "products",
   categorias: "categories",
   banners: "banners",
