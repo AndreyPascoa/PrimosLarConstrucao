@@ -11,6 +11,7 @@ import path from "node:path";
 import "dotenv/config";
 import whatsapp from "whatsapp-web.js";
 import QRCode from "qrcode";
+import { ensureIncomingId, messageExternalId } from "./message-id.mjs";
 const { Client, LocalAuth, MessageMedia } = whatsapp;
 const base = process.env.CRM_APP_URL?.replace(/\/$/, ""),
   secret = process.env.CRM_CONNECTOR_SECRET;
@@ -22,6 +23,7 @@ const spool = path.resolve(
 );
 await mkdir(spool, { recursive: true, mode: 0o700 });
 async function persistIncoming(event) {
+  event = ensureIncomingId(event);
   const key = createHash("sha256")
     .update(event.accountId + event.externalId)
     .digest("hex");
@@ -34,8 +36,14 @@ async function flushIncoming() {
     /^[a-f0-9]{64}\.json$/.test(n),
   )) {
     const file = path.join(spool, name);
-    await api("incoming", JSON.parse(await readFile(file, "utf8")));
-    await unlink(file);
+    try {
+      const event = JSON.parse(await readFile(file, "utf8"));
+      await api("incoming", ensureIncomingId(event, `${event.accountId}:${name}`));
+      await unlink(file);
+    } catch (error) {
+      // Retain the file, but don't prevent other receipts or account heartbeats.
+      console.error("Recebimento pendente:", error.message);
+    }
   }
 }
 const clients = new Map(),
@@ -116,7 +124,7 @@ async function connect(account) {
       if (!/^\d{8,16}$/.test(phone || "")) return;
       const event = {
         accountId: account.id,
-        externalId: message.id._serialized,
+        externalId: messageExternalId(message),
         phone,
         name: (contact.pushname || contact.name || "").slice(0, 120),
         body: (message.body || "").slice(0, 20000),
@@ -139,15 +147,18 @@ async function connect(account) {
       } catch {
         event.body += "\n[Anexo indisponível: confira no WhatsApp.]";
       }
+      event.body = event.body.slice(0, 20000);
       await persistIncoming(event);
     } catch (error) {
       console.error("Falha ao registrar recebimento:", error.message);
     }
   });
   client.on("message_ack", (message, ack) => {
+    const externalId = messageExternalId(message);
+    if (!externalId) return;
     void api("ack", {
       accountId: account.id,
-      externalId: message.id._serialized,
+      externalId,
       ack,
     }).catch((e) => console.error(e.message));
   });
@@ -213,15 +224,16 @@ async function tick() {
       continue;
     }
     // Never retry the WhatsApp send if acknowledging to the CRM fails.
+    const externalId = messageExternalId(sent);
     await api("result", {
       id: job.id,
       status: "sent",
-      externalId: sent.id._serialized,
+      externalId,
     });
-    if (sent.ack >= 2)
+    if (sent.ack >= 2 && externalId)
       await api("ack", {
         accountId: account.id,
-        externalId: sent.id._serialized,
+        externalId,
         ack: sent.ack,
       });
   }
