@@ -62,10 +62,6 @@ export default function Storefront({ content }: { content: PublicContent }) {
       return next;
     });
   }
-  function add(id: string) {
-    setCart((c) => ({ ...c, [id]: Math.min(999, (c[id] || 0) + 1) }));
-    setMessage("Produto adicionado à sua lista de orçamento.");
-  }
   const quote = `Olá! Gostaria de um orçamento dos seguintes produtos:\n\n${cartProducts.map((p) => `${cart[p.id]} × ${p.name}`).join("\n")}\n\nPodem confirmar os valores, a disponibilidade e as opções de entrega?`;
   return (
     <PublicContentProvider value={content}>
@@ -88,7 +84,13 @@ export default function Storefront({ content }: { content: PublicContent }) {
           </div>
           {s.newsEnabled && <NewsSection />}
           {s.aboutEnabled && <AboutSection />}
-          <ShopSection onAdd={add} />
+          <ShopSection
+            quantities={cart}
+            onQuantity={(id, quantity) => {
+              setQuantity(id, quantity);
+              setMessage("Quantidade atualizada na sua lista de orçamento.");
+            }}
+          />
         </main>
         <SiteFooter />
         <FloatingWhatsApp />

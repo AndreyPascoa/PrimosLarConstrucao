@@ -2,9 +2,23 @@
 
 import Image from "next/image";
 import { usePublicContent } from "./public-content";
-import { useState } from "react";
-import { Package } from "lucide-react";
-export default function Vendas({ onAdd }: { onAdd: (id: string) => void }) {
+import { useRef, useState } from "react";
+import ProductQuantity from "./product-quantity";
+import type { ProductItem } from "@/lib/content";
+import { Package, X } from "lucide-react";
+export default function Vendas({
+  quantities,
+  onQuantity,
+}: {
+  quantities: Record<string, number>;
+  onQuantity: (id: string, quantity: number) => void;
+}) {
+  const [selected, setSelected] = useState<ProductItem | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  function openProduct(product: ProductItem) {
+    setSelected(product);
+    dialog.current?.showModal();
+  }
   const { products, categories, settings, catalogAvailable } =
     usePublicContent();
   const [useFilter, setUseFilter] = useState("Todos");
@@ -88,22 +102,22 @@ export default function Vendas({ onAdd }: { onAdd: (id: string) => void }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
-          {produtosFiltrados.slice((page - 1) * 12, page * 12).map((item) => {
-            const cores = {
-              primaria: item.category?.primaryColor,
-              secundaria: item.category?.secondaryColor,
-            };
-
-            return (
-              <div
-                key={item.id}
-                className="group bg-slate-50 rounded-[2.5rem] p-4 border border-gray-100 hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center cursor-pointer"
+          {produtosFiltrados.slice((page - 1) * 12, page * 12).map((item) => (
+            <article
+              key={item.id}
+              className="group bg-slate-50 rounded-[2.5rem] p-4 border border-gray-100 hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center"
+            >
+              <button
+                type="button"
+                className="product-details-trigger"
+                onClick={() => openProduct(item)}
+                aria-label={`Ver detalhes de ${item.name}`}
               >
                 <div className="relative w-full h-64">
                   {item.imageUrl ? (
                     <Image
-                      src={item.imageUrl!}
-                      alt={item.name}
+                      src={item.imageUrl}
+                      alt=""
                       fill
                       className="object-contain"
                       sizes="(max-width: 640px) 100vw, 400px"
@@ -115,40 +129,17 @@ export default function Vendas({ onAdd }: { onAdd: (id: string) => void }) {
                     />
                   )}
                 </div>
-
-                <div className="flex gap-4 mb-2 text-center justify-center items-center">
-                  <div
-                    style={{ background: cores.secundaria }}
-                    className="flex gap-2 mb-2 rounded-3xl p-2 shadow-md text-center justify-center items-center"
-                  >
-                    <Package color={cores.primaria} size={14} />
-
-                    <span
-                      style={{ color: cores.primaria }}
-                      className="text-[9px] font-bold uppercase tracking-[0.2em]"
-                    >
-                      {item.category?.name}
-                    </span>
-                  </div>
-
-                  <h3 className="text-l font-black text-(--primarycolor) mb-2">
-                    {item.name}
-                  </h3>
-                </div>
-
-                <p className="text-sm text-gray-500 leading-snug min-h-10">
-                  {item.description}
-                </p>
-
-                <button
-                  onClick={() => onAdd(item.id)}
-                  className="bg-(--primarycolor) p-3 mt-4 w-full rounded-3xl"
-                >
-                  <span className="text-white">Adicionar ao orçamento</span>
-                </button>
-              </div>
-            );
-          })}
+                <h3 className="text-l font-black text-(--primarycolor) mt-3 mb-2">
+                  {item.name}
+                </h3>
+              </button>
+              <ProductQuantity
+                name={item.name}
+                quantity={quantities[item.id] || 0}
+                onChange={(quantity) => onQuantity(item.id, quantity)}
+              />
+            </article>
+          ))}
         </div>
 
         {!catalogAvailable && (
@@ -188,6 +179,52 @@ export default function Vendas({ onAdd }: { onAdd: (id: string) => void }) {
           </p>
         </div>
       </div>
+      <dialog
+        ref={dialog}
+        className="product-details-dialog"
+        aria-labelledby="product-details-title"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) dialog.current?.close();
+        }}
+      >
+        {selected && (
+          <div className="product-details-content">
+            <button
+              type="button"
+              className="product-details-close"
+              aria-label="Fechar detalhes do produto"
+              onClick={() => dialog.current?.close()}
+              autoFocus
+            >
+              <X size={24} />
+            </button>
+            <div className="product-details-image">
+              {selected.imageUrl ? (
+                <Image
+                  src={selected.imageUrl}
+                  alt={selected.name}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 80vw, 260px"
+                />
+              ) : (
+                <Package size={64} />
+              )}
+            </div>
+            <h2 id="product-details-title">{selected.name}</h2>
+            <p className="product-details-description">
+              {selected.description ||
+                "Consulte nossa equipe para mais informações sobre este produto."}
+            </p>
+            <ProductQuantity
+              key={selected.id}
+              name={selected.name}
+              quantity={quantities[selected.id] || 0}
+              onChange={(quantity) => onQuantity(selected.id, quantity)}
+            />
+          </div>
+        )}
+      </dialog>
     </section>
   );
 }
