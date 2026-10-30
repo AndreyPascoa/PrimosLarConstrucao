@@ -51,7 +51,13 @@ async function api(path, body) {
     ...(body ? { body: JSON.stringify(body) } : {}),
     signal: AbortSignal.timeout(45000),
   });
-  if (!response.ok) throw Error(`CRM respondeu ${response.status} em ${path}`);
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    const reason = typeof detail?.error === "string"
+      ? `: ${detail.error.slice(0, 1000)}`
+      : "";
+    throw Error(`CRM respondeu ${response.status} em ${path}${reason}`);
+  }
   return response.json();
 }
 const status = (id, state, qr) =>
