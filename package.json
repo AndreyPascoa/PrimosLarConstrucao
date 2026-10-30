@@ -9,7 +9,14 @@
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run build",
     "images:optimize": "node scripts/optimize-images.mjs",
-    "prebuild": "npm run images:optimize"
+    "prebuild": "npm run db:generate && npm run images:optimize",
+    "db:generate": "prisma generate --config prisma7.config.ts",
+    "db:migrate": "prisma migrate deploy --config prisma7.config.ts",
+    "db:seed": "node --import tsx scripts/seed.ts",
+    "admin:password": "node scripts/admin-password.mjs",
+    "postinstall": "npm run db:generate",
+    "pretypecheck": "npm run db:generate",
+    "test": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
@@ -21,7 +28,9 @@
     "next": "16.3.8",
     "pg": "^8.23.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -30,8 +39,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "prisma": "^7.10.1",
-    "sharp": "^0.35.5",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "engines": {

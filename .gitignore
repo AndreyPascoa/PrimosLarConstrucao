@@ -44,3 +44,5 @@ next-env.d.ts
 /public/optimized/
 
 /src/generated/prisma
+
+!.env.example

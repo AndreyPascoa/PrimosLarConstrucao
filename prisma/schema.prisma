@@ -30,3 +30,43 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  linkUrl   String   @default("")
+  position  Int      @default(0)
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id        String   @id @default("site")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+model AdminSession {
+  tokenHash String   @id
+  identity  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  key       String   @id
+  count     Int      @default(1)
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  name      String
+  url       String   @unique
+  path      String   @unique
+  createdAt DateTime @default(now())
+}
