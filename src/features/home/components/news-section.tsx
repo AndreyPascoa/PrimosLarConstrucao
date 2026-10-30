@@ -1,6 +1,11 @@
+"use client";
+import { useSiteSettings } from "@/features/home/components/public-content";
 import Image from "next/image";
 
 export default function Novidade() {
+  const siteConfig = useSiteSettings();
+
+
   return (
     <>
       <section className="w-full max-w-6xl mx-auto py-16 px-4">
@@ -28,12 +33,11 @@ export default function Novidade() {
 
         {/* Conteúdo */}
         <div className="flex flex-col md:flex-row items-center gap-12">
-
           {/* Imagem */}
           <div className="w-full md:w-1/2 flex justify-center">
             <Image
-              src="/evento/aniversario.png"
-              alt="45 anos da Primos Lar e Construção"
+              src={siteConfig.newsImage}
+              alt={siteConfig.newsTitle}
               sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1152px) 50vw, 552px"
               width={750}
               height={600}
@@ -43,34 +47,20 @@ export default function Novidade() {
 
           {/* Texto */}
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-left">
-
             <span className="text-sm font-bold tracking-widest text-(--primarycolor) uppercase mb-3">
-              Uma história construída com você
+              {siteConfig.newsLabel}
             </span>
 
             <h2 className="text-3xl md:text-4xl font-bold text-(--primarycolor) mb-4">
-              45 ANOS DE PRIMOS
+              {siteConfig.newsTitle}
             </h2>
 
             <p className="text-gray-700 text-lg leading-relaxed mb-6">
-              Em 2026, a PRIMOS Lar e Construção completa
-              <strong> 45 anos de história</strong>, fazendo parte da
-              construção de Sorocaba e região.
-            </p>
-
-            <p className="text-gray-700 text-lg leading-relaxed mb-8">
-              E para comemorar essa trajetória, estamos preparando
-              <strong> novidades e ações especiais</strong> para celebrar
-              esse momento junto com nossos clientes.
-            </p>
-
-            <p className="font-semibold text-(--primarycolor) mb-8 text-xl">
-              45 anos construindo histórias. E ainda temos muito pela frente.
+              {siteConfig.newsText}
             </p>
           </div>
         </div>
       </section>
-
     </>
   );
 }
